@@ -1,0 +1,50 @@
+package com.airtribe.learntrack.entity;
+
+public class Course {
+    private int id;
+    private String courseName;
+    private String description;
+    private int durationInWeeks;
+    private boolean isActive;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getCourseName() {
+        return courseName;
+    }
+
+    public void setCourseName(String courseName) {
+        this.courseName = courseName;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public int getDurationInWeeks() {
+        return durationInWeeks;
+    }
+
+    public void setDurationInWeeks(int durationInWeeks) {
+        this.durationInWeeks = durationInWeeks;
+    }
+
+    public boolean isActive() {
+        return isActive;
+    }
+
+    public void setActive(boolean isActive) {
+        this.isActive = isActive;
+    }
+
+}
