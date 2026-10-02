@@ -5,9 +5,11 @@ import java.util.Map;
 import java.util.Scanner;
 
 import com.airtribe.learntrack.constants.MenuOptions;
+import com.airtribe.learntrack.entity.Course;
 import com.airtribe.learntrack.entity.Student;
 import com.airtribe.learntrack.exceptions.EntityNotFoundException;
 import com.airtribe.learntrack.exceptions.InvalidDataException;
+import com.airtribe.learntrack.services.CourseService;
 import com.airtribe.learntrack.services.StudentService;
 
 public class App {
@@ -32,6 +34,12 @@ public class App {
                         handleSearchStudentById(sc);
                     } else if (selectedMenu.equals(MenuOptions.DEACTIVATE_A_STUDENT)) {
                         handleDeactivateStudent(sc);
+                    } else if (selectedMenu.equals(MenuOptions.ADD_NEW_COURSE)) {
+                        handleAddNewCourse(sc);
+                    } else if (selectedMenu.equals(MenuOptions.VIEW_ALL_COURSES)) {
+                        handleViewAllCourses(sc);
+                    } else if (selectedMenu.equals(MenuOptions.ACTIVATE_OR_DEACTIVATE_A_COURSE)) {
+                        handleActiveStatusChange(sc);
                     } else if (selectedMenu.equals(MenuOptions.EXIT)) {
                         isRunning = false;
                     }
@@ -51,6 +59,57 @@ public class App {
         }
 
         sc.close();
+
+    }
+
+    private static void handleActiveStatusChange(Scanner sc) {
+        System.out.println("Enter Course Id");
+        var courseId = sc.nextInt();
+        sc.nextLine();
+        System.out.println("Enter Course Status");
+        var active = sc.nextBoolean();
+
+        var courseService = new CourseService();
+        try {
+            courseService.UpdateCourseActiveStatus(courseId, active);
+        } catch (EntityNotFoundException e) {
+            System.err.println(e.getMessage());
+
+        }
+    }
+
+    private static void handleViewAllCourses(Scanner sc) {
+
+        var courseService = new CourseService();
+
+        var courses = courseService.GetAllCourses();
+        System.out.println("ID | Name | Description | Duration (in weeks) | Active");
+
+        for (var course : courses) {
+            displayCourse(course);
+        }
+    }
+
+    private static void displayCourse(Course course) {
+        System.out.println(course.getId() + " | " + course.getCourseName() + " | " + course.getDescription() + " | "
+                + course.getDurationInWeeks() + " | " + course.isActive());
+
+    }
+
+    private static void handleAddNewCourse(Scanner sc) {
+        System.out.println("Enter Course Name");
+        var courseName = sc.nextLine();
+        System.out.println("Enter Description");
+        var description = sc.nextLine();
+        System.out.println("Enter Duration (in weeks)");
+        var durationInWeeks = sc.nextInt();
+
+        var courseService = new CourseService();
+        try {
+            courseService.AddCourse(courseName, description, durationInWeeks);
+        } catch (InvalidDataException e) {
+            System.err.println(e.getMessage());
+        }
 
     }
 

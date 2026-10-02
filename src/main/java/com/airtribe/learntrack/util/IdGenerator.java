@@ -12,11 +12,11 @@ public class IdGenerator {
         return personCounter.getAndIncrement();
     }
 
-    public int getNextCourseId() {
+    public static int getNextCourseId() {
         return courseCounter.getAndIncrement();
     }
 
-    public int getNextEnrollmentId() {
+    public static int getNextEnrollmentId() {
         return enrollmentCounter.getAndIncrement();
     }
 

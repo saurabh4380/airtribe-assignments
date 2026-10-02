@@ -7,6 +7,17 @@ public class Course {
     private int durationInWeeks;
     private boolean isActive;
 
+    public Course() {
+
+    }
+
+    public Course(int id, String courseName, String description, int durationInWeeks) {
+        this.id = id;
+        this.courseName = courseName;
+        this.description = description;
+        this.durationInWeeks = durationInWeeks;
+    }
+
     public int getId() {
         return id;
     }

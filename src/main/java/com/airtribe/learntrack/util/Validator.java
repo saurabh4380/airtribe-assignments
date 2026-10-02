@@ -25,4 +25,10 @@ public class Validator {
         }
     }
 
+    public static void IsGreaterThanZero(int data) throws InvalidDataException {
+        if (data <= 0) {
+            throw new InvalidDataException("Numbers lesser than zero are not allowed");
+        }
+    }
+
 }

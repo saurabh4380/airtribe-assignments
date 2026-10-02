@@ -1,0 +1,72 @@
+# ==========================================
+# Maven Build Artifacts
+# ==========================================
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
+.mvn/wrapper/maven-wrapper.jar
+
+# ==========================================
+# Compiled Java Files & Logs
+# ==========================================
+*.class
+*.log
+*.ctxt
+hs_err_pid*
+replay_pid*
+
+# NOTE: Since target/ is excluded above, compiled package 
+# archives (*.jar, *.war, *.ear) inside target/ are already covered.
+# Uncomment the lines below if you generate packages outside target/.
+# *.jar
+# *.war
+# *.ear
+
+# ==========================================
+# IDE Specific Files
+# ==========================================
+
+# IntelliJ IDEA
+.idea/
+*.iws
+*.iml
+*.ipr
+out/
+
+# Eclipse
+.metadata/
+.classpath
+.project
+.settings/
+.factorypath
+.apt_generated/
+.apt_generated_tests/
+
+# Visual Studio Code (VS Code)
+.vscode/
+.code-workspace
+
+# NetBeans
+nbproject/private/
+nbbuild/
+dist/
+nbdist/
+nbactions.xml
+nb-configuration.xml
+
+# ==========================================
+# Operating System Junk
+# ==========================================
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+Desktop.ini
+$RECYCLE.BIN/
