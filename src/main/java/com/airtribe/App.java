@@ -1,15 +1,19 @@
 package com.airtribe;
 
+import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Map;
 import java.util.Scanner;
 
 import com.airtribe.learntrack.constants.MenuOptions;
+import com.airtribe.learntrack.dtos.EnrollmentDto;
 import com.airtribe.learntrack.entity.Course;
 import com.airtribe.learntrack.entity.Student;
+import com.airtribe.learntrack.enums.EnrollmentStatus;
 import com.airtribe.learntrack.exceptions.EntityNotFoundException;
 import com.airtribe.learntrack.exceptions.InvalidDataException;
 import com.airtribe.learntrack.services.CourseService;
+import com.airtribe.learntrack.services.EnrollmentService;
 import com.airtribe.learntrack.services.StudentService;
 
 public class App {
@@ -21,9 +25,9 @@ public class App {
             displayMenuOptions();
 
             try {
-                var selectedMenuId = sc.nextInt();
+                var selectedMenuItemId = sc.nextInt();
                 sc.nextLine();
-                var selectedMenu = MenuOptions.ALL_OPTIONS.get(selectedMenuId);
+                var selectedMenu = MenuOptions.ALL_OPTIONS.get(selectedMenuItemId);
 
                 if (selectedMenu != null) {
                     if (selectedMenu.equals(MenuOptions.ADD_NEW_STUDENT)) {
@@ -40,16 +44,17 @@ public class App {
                         handleViewAllCourses(sc);
                     } else if (selectedMenu.equals(MenuOptions.ACTIVATE_OR_DEACTIVATE_A_COURSE)) {
                         handleActiveStatusChange(sc);
+                    } else if (selectedMenu.equals(MenuOptions.ENROLL_A_STUDENT_IN_COURSE)) {
+                        handleEnrollAStudentInCourse(sc);
+                    } else if (selectedMenu.equals(MenuOptions.VIEW_ENROLLMENTS_FOR_STUDENT)) {
+                        handleViewEnrollmentsForAStudent(sc);
+                    } else if (selectedMenu.equals(MenuOptions.UPDATE_ENROLLMENT_STATUS)) {
+                        handleUpdateEnrollmentStatus(sc);
                     } else if (selectedMenu.equals(MenuOptions.EXIT)) {
                         isRunning = false;
                     }
                 } else {
                     System.err.println("Enter a valid option");
-
-                }
-
-                if (selectedMenuId == 0) {
-                    isRunning = false;
                 }
             } catch (InputMismatchException ex) {
                 System.err.println("Enter a valid option");
@@ -60,6 +65,91 @@ public class App {
 
         sc.close();
 
+    }
+
+    private static void handleUpdateEnrollmentStatus(Scanner sc) {
+
+        try {
+            System.out.println("Enter Enrollment Id");
+            var enrollmentId = sc.nextInt();
+            sc.nextLine();
+            System.out.println("Select an enrollment status option");
+
+            var values = EnrollmentStatus.values();
+
+            for (int i = 0; i < values.length; i++) {
+                System.out.println(i + " " + values[i].toString());
+
+            }
+            var ordinal = sc.nextInt();
+            sc.nextLine();
+
+            if (ordinal < 0 || ordinal >= values.length) {
+                throw new IllegalArgumentException("Invalid option: " + ordinal);
+            }
+            var status = values[ordinal];
+
+            var enrollmentService = new EnrollmentService();
+            enrollmentService.UpdateEnrollment(enrollmentId, status);
+        } catch (EntityNotFoundException e) {
+            System.err.println(e.getMessage());
+
+        } catch (IllegalArgumentException e) {
+            System.err.println(e.getMessage());
+        } catch (InputMismatchException e) {
+            System.err.println(e.getMessage());
+        }
+    }
+
+    private static void handleViewEnrollmentsForAStudent(Scanner sc) {
+        try {
+            System.out.println("Enter Student Id");
+            var studentId = sc.nextInt();
+            sc.nextLine();
+            var enrollmentService = new EnrollmentService();
+            var enrollments = enrollmentService.GetEnrollmentByStudentId(studentId);
+
+            displayEnrollments(enrollments);
+
+        } catch (EntityNotFoundException e) {
+            System.err.println("Student not found");
+        } catch (IllegalArgumentException e) {
+            System.err.println(e.getMessage());
+        }
+    }
+
+    private static void displayEnrollments(ArrayList<EnrollmentDto> enrollments) {
+        System.out.println("ID | Student Name | Course Name | Enrollment Date | Status");
+
+        if (enrollments.size() > 0) {
+            for (var enrollment : enrollments) {
+                System.out.println(enrollment.getId() + " | " + enrollment.getStudent().getDisplayName() + " | "
+                        + enrollment.getCourse().getCourseName() + " | " + enrollment.getEnrollmentDate() + " | "
+                        + enrollment.getStatus());
+
+            }
+        } else {
+            System.err.println("No enrollments present");
+        }
+    }
+
+    private static void handleEnrollAStudentInCourse(Scanner sc) {
+        try {
+            System.out.println("Enter student Id");
+            var studentId = sc.nextInt();
+            sc.nextLine();
+            System.out.println("Enter Course Id");
+            var scourseId = sc.nextInt();
+            sc.nextLine();
+
+            var enrollmentService = new EnrollmentService();
+            enrollmentService.AddNewEnrollment(studentId, scourseId);
+
+        } catch (EntityNotFoundException e) {
+            System.err.println(e.getMessage());
+        } catch (IllegalArgumentException e) {
+            System.err.println(e.getMessage());
+        }
     }
 
     private static void handleActiveStatusChange(Scanner sc) {
@@ -183,10 +273,11 @@ public class App {
     }
 
     static void displayMenuOptions() {
-        System.out.println("Select an option:");
+        System.out.println(System.lineSeparator() + "=========== Main Menu ===========");
+        System.out.println("Select an option by ID: ");
         var entries = MenuOptions.ALL_OPTIONS.entrySet().stream().sorted(Map.Entry.comparingByKey()).toList();
         for (var entry : entries) {
-            System.out.println(entry.getKey() + "." + entry.getValue());
+            System.out.println(entry.getKey() + ". " + entry.getValue());
         }
     }
 }
