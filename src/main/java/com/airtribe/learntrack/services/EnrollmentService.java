@@ -3,7 +3,6 @@ package com.airtribe.learntrack.services;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import com.airtribe.learntrack.dtos.EnrollmentDto;
 import com.airtribe.learntrack.entity.Enrollment;
@@ -22,23 +21,23 @@ public class EnrollmentService {
         courseService = new CourseService();
     }
 
-    public Enrollment AddNewEnrollment(int studentId, int courseId) throws EntityNotFoundException {
+    public Enrollment addNewEnrollment(int studentId, int courseId) throws EntityNotFoundException {
 
-        var student = studentService.SearchStudent(studentId);
+        var student = studentService.searchStudent(studentId);
 
         var course = courseService.searchCourse(courseId);
 
-        var enrollment = enrollmentRepository.AddEnrollment(student.getId(), course.getId(), Date.from(Instant.now()),
+        var enrollment = enrollmentRepository.addEnrollment(student.getId(), course.getId(), Date.from(Instant.now()),
                 EnrollmentStatus.ACTIVE);
 
         return enrollment;
     }
 
-    public ArrayList<EnrollmentDto> GetEnrollmentByStudentId(int studentId) throws EntityNotFoundException {
+    public ArrayList<EnrollmentDto> getEnrollmentByStudentId(int studentId) throws EntityNotFoundException {
 
-        var student = studentService.SearchStudent(studentId);
+        var student = studentService.searchStudent(studentId);
 
-        var enrollments = enrollmentRepository.GetEnrollmentByStudentId(student.getId());
+        var enrollments = enrollmentRepository.getEnrollmentByStudentId(student.getId());
 
         var enrollmentList = new ArrayList<EnrollmentDto>();
 
@@ -55,9 +54,9 @@ public class EnrollmentService {
         return enrollmentList;
     }
 
-    public Enrollment UpdateEnrollment(int enrollmentId, EnrollmentStatus enrollmentStatus)
+    public Enrollment updateEnrollment(int enrollmentId, EnrollmentStatus enrollmentStatus)
             throws EntityNotFoundException {
-        var enrollmentFromDb = enrollmentRepository.GetEnrollmentById(enrollmentId);
+        var enrollmentFromDb = enrollmentRepository.getEnrollmentById(enrollmentId);
         if (enrollmentFromDb.isEmpty()) {
             throw new EntityNotFoundException("");
         }
@@ -66,7 +65,7 @@ public class EnrollmentService {
 
         enrollment.setStatus(enrollmentStatus);
 
-        enrollmentRepository.UpdateEnrollment(enrollmentId, enrollment);
+        enrollmentRepository.updateEnrollment(enrollmentId, enrollment);
         return enrollment;
     }
 }

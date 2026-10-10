@@ -17,7 +17,7 @@ public class CourseRepository {
         return course;
     }
 
-    public ArrayList<Course> GetAll() {
+    public ArrayList<Course> getAll() {
         return courses;
     }
 
@@ -31,7 +31,7 @@ public class CourseRepository {
         return courseFromDb.get();
     }
 
-    public Course UpdateCourse(int courseId, Course course) throws EntityNotFoundException {
+    public Course updateCourse(int courseId, Course course) throws EntityNotFoundException {
 
         var courseFromDb = courses.stream().filter(x -> x != null && x.getId() == courseId).findFirst();
 
