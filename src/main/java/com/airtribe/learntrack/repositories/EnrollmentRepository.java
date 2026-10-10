@@ -13,23 +13,23 @@ import com.airtribe.learntrack.util.IdGenerator;
 public class EnrollmentRepository {
     public static ArrayList<Enrollment> enrollments = new ArrayList<>();
 
-    public Enrollment AddEnrollment(int studentId, int courseId, Date enrollmentDate,
-            EnrollmentStatus enrollmentStatus) {
+    public Enrollment addEnrollment(int studentId, int courseId, Date enrollmentDate,
+                                    EnrollmentStatus enrollmentStatus) {
         var id = IdGenerator.getNextEnrollmentId();
         var enrollment = new Enrollment(id, studentId, courseId, enrollmentDate, enrollmentStatus);
         enrollments.add(enrollment);
         return enrollment;
     }
 
-    public Optional<Enrollment> GetEnrollmentById(int enrollmentId) {
+    public Optional<Enrollment> getEnrollmentById(int enrollmentId) {
         return enrollments.stream().filter(x -> x != null && x.getId() == enrollmentId).findFirst();
     }
 
-    public List<Enrollment> GetEnrollmentByStudentId(int studentId) {
+    public List<Enrollment> getEnrollmentByStudentId(int studentId) {
         return enrollments.stream().filter(x -> x != null && x.getStudentId() == studentId).toList();
     }
 
-    public Enrollment UpdateEnrollment(int id, Enrollment enrollment) throws EntityNotFoundException {
+    public Enrollment updateEnrollment(int id, Enrollment enrollment) throws EntityNotFoundException {
 
         var enrollmentFromDb = enrollments.stream().filter(x -> x != null && x.getId() == id).findFirst();
 

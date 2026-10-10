@@ -14,7 +14,7 @@ public class Trainer extends Person {
 
     @Override
     public String getDisplayName() {
-        return TRAINER_SALUTATION + getFirstName() + getLastName();
+        return TRAINER_SALUTATION + " " + getFirstName() + " " + getLastName();
     }
 
 }

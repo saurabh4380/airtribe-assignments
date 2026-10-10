@@ -30,6 +30,6 @@ public class Student extends Person {
 
     @Override
     public String getDisplayName() {
-        return getFirstName() + getLastName() + "<" + getEmail() + ">";
+        return getFirstName() + " " + getLastName() + "<" + getEmail() + ">";
     }
 }

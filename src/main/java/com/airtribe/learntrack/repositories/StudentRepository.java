@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Optional;
 
 import com.airtribe.learntrack.entity.Student;
+import com.airtribe.learntrack.exceptions.EntityNotFoundException;
 
 public class StudentRepository {
 
@@ -21,7 +22,11 @@ public class StudentRepository {
         return students.stream().filter(x -> x != null && x.getId() == studentId).findFirst();
     }
 
-    public Student updateStudent(int studentId, Student student) {
+    public Optional<Student> searchStudentByEmail(String emailAddress) {
+        return students.stream().filter(x -> x != null && x.getEmail() == emailAddress).findFirst();
+    }
+
+    public Student updateStudent(int studentId, Student student) throws EntityNotFoundException {
         var studentFromList = students.stream().filter(x -> x != null && x.getId() == studentId).findFirst();
 
         if (studentFromList.isPresent()) {
@@ -29,6 +34,7 @@ public class StudentRepository {
             students.set(indexOfStudent, student);
         } else {
             System.err.println("No element found in students list");
+            throw new EntityNotFoundException("No element found in students list");
         }
 
         return studentFromList.get();

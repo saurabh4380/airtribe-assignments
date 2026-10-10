@@ -17,7 +17,7 @@ public class StudentService {
         studentRepository = new StudentRepository();
     }
 
-    public Student AddStudent(String firstName, String lastName, String email) throws InvalidDataException {
+    public Student addStudent(String firstName, String lastName, String email) throws InvalidDataException {
 
         validateData(firstName, lastName, email);
 
@@ -28,11 +28,23 @@ public class StudentService {
         return student;
     }
 
-    public ArrayList<Student> GetAllStudents() {
+    public Student addStudent(String firstName, String lastName, String email, boolean isActive)
+            throws InvalidDataException {
+
+        validateData(firstName, lastName, email);
+
+        var id = IdGenerator.getNextPersonId();
+        var student = new Student(id, firstName, lastName, email);
+        student.setActive(isActive);
+        studentRepository.addStudent(student);
+        return student;
+    }
+
+    public ArrayList<Student> getAllStudents() {
         return studentRepository.getAllStudents();
     }
 
-    public Student SearchStudent(int studentId) throws EntityNotFoundException {
+    public Student searchStudent(int studentId) throws EntityNotFoundException {
         Optional<Student> student = studentRepository.searchStudentById(studentId);
         if (student.isEmpty()) {
             throw new EntityNotFoundException(String.format("Student with Id: %d not found", studentId));
@@ -40,7 +52,15 @@ public class StudentService {
         return student.get();
     }
 
-    public Student DeactivateStudent(int studentId) throws EntityNotFoundException {
+    public Student searchStudent(String emailAddress) throws EntityNotFoundException {
+        Optional<Student> student = studentRepository.searchStudentByEmail(emailAddress);
+        if (student.isEmpty()) {
+            throw new EntityNotFoundException(String.format("Student with emailAddress: %s not found", emailAddress));
+        }
+        return student.get();
+    }
+
+    public Student deactivateStudent(int studentId) throws EntityNotFoundException {
         Optional<Student> studentOptional = studentRepository.searchStudentById(studentId);
         if (studentOptional.isEmpty()) {
             throw new EntityNotFoundException(String.format("Student with Id: %d not found", studentId));
@@ -55,9 +75,9 @@ public class StudentService {
 
     private void validateData(String firstName, String lastName, String email) throws InvalidDataException {
         try {
-            Validator.IsNotNullOrEmpty(firstName);
-            Validator.IsNotNullOrEmpty(lastName);
-            Validator.IsValidEmail(email);
+            Validator.isNotNullOrEmpty(firstName);
+            Validator.isNotNullOrEmpty(lastName);
+            Validator.isValidEmail(email);
         } catch (InvalidDataException ex) {
             throw ex;
         }
